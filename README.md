@@ -1,4 +1,4 @@
-# metrics-feign
+# metrics-feign [![travis status](https://travis-ci.org/mwiede/metrics-feign.svg?branch=master)](https://travis-ci.org/mwiede/metrics-feign)
 A decorator wrapping [Feign](https://github.com/OpenFeign/feign) client method handlers in order to provide [Dropwizard Metrics](http://metrics.dropwizard.io) of calls to feign target interfaces.
 
 ## Usage
