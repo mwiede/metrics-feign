@@ -140,7 +140,7 @@
   <scm>
     <url>https://github.com/mwiede/metrics-feign</url>
     <connection>scm:git:https://github.com/mwiede/metrics-feign.git</connection>
-    <developerConnection>scm:git:git@github.com:mwiede/metrics-feign.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/mwiede/metrics-feign.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
