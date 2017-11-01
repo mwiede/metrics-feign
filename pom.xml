@@ -4,7 +4,7 @@
 
   <groupId>com.github.mwiede</groupId>
   <artifactId>metrics-feign</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -141,7 +141,7 @@
     <url>https://github.com/mwiede/metrics-feign</url>
     <connection>scm:git:https://github.com/mwiede/metrics-feign.git</connection>
     <developerConnection>scm:git:git@github.com:mwiede/metrics-feign.git</developerConnection>
-    <tag>metrics-feign-1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
