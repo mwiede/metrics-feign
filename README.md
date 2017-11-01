@@ -40,9 +40,18 @@ A decorator wrapping [Feign](https://github.com/OpenFeign/feign) client method h
 
         reporter.report();
     }
+```
 
+## Download
 
+You can use this library via maven:
 
+```xml
+<dependency>
+  <groupId>com.github.mwiede</groupId>
+  <artifactId>metrics-feign</artifactId>
+  <version>1.0</version>
+</dependency>
 ```
 
 
