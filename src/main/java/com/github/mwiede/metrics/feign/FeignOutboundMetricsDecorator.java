@@ -25,7 +25,7 @@ import feign.Target;
  * global {@link MetricRegistry}. Additionally, it triggers the metric during invocation of the {@link
  * feign.InvocationHandlerFactory.MethodHandler}s.
  * <p>
- * This class is inspired by {@link com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener}.
+ * This class is inspired by com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener.
  */
 public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
 
