@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.mwiede</groupId>
     <artifactId>metrics-feign</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0</version>
 
     <description>A decorator wrapping Feign client method handlers in order to provide metrics of calls to feign target
         interfaces.
@@ -208,7 +207,7 @@
         <url>https://github.com/mwiede/metrics-feign</url>
         <connection>scm:git:https://github.com/mwiede/metrics-feign.git</connection>
         <developerConnection>scm:git:https://github.com/mwiede/metrics-feign.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>metrics-feign-1.0</tag>
     </scm>
 
     <issueManagement>
