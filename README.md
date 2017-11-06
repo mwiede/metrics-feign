@@ -1,5 +1,19 @@
 # metrics-feign [![travis status](https://travis-ci.org/mwiede/metrics-feign.svg?branch=master)](https://travis-ci.org/mwiede/metrics-feign)
-A decorator wrapping [Feign](https://github.com/OpenFeign/feign) client method handlers in order to provide [Dropwizard Metrics](http://metrics.dropwizard.io) of calls to feign target interfaces.
+A decorator wrapping [Feign](https://github.com/OpenFeign/feign) client method handlers in order to provide [Dropwizard Metrics](http://metrics.dropwizard.io) of calls to feign target interfaces. 
+
+In contrast to instrumentation for instance of jersey, where _inbound metrics_ are collected, this helps you retrieve _outbound metrics_. 
+
+## Download
+
+Here are the maven coordinates you have to add to your project:
+
+```xml
+<dependency>
+  <groupId>com.github.mwiede</groupId>
+  <artifactId>metrics-feign</artifactId>
+  <version>1.0</version>
+</dependency>
+```
 
 ## Usage
 
