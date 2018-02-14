@@ -20,14 +20,12 @@ import feign.InvocationHandlerFactory;
 import feign.Target;
 
 /**
- * A decorator class, which takes all methods given in
- * {@link InvocationHandlerFactory#create(Target, Map)} and initializes a metric for each
- * annotations of {@link Timed}, {@link Metered} or {@link ExceptionMetered} into the global
- * {@link MetricRegistry}. Additionally, it triggers the metric during invocation of the
- * {@link feign.InvocationHandlerFactory.MethodHandler}s.
+ * A decorator class, which takes all methods given in {@link InvocationHandlerFactory#create(Target, Map)} and
+ * initializes a metric for each annotations of {@link Timed}, {@link Metered} or {@link ExceptionMetered} into the
+ * global {@link MetricRegistry}. Additionally, it triggers the metric during invocation of the {@link
+ * feign.InvocationHandlerFactory.MethodHandler}s.
  * <p>
- * This class is inspired by
- * {@link com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener}.
+ * This class is inspired by com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener.
  */
 public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
 
