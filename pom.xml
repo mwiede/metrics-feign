@@ -16,11 +16,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compilation dependencies -->
-        <metrics.version>3.2.3</metrics.version>
+        <metrics.version>4.0.2</metrics.version>
         <feign.version>9.5.1</feign.version>
 
         <!-- Test dependencies -->
-        <metrics.version>3.2.3</metrics.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.11.0</mockito.version>
         <wiremock.version>2.5.0</wiremock.version>
@@ -58,12 +57,38 @@
                 <artifactId>wiremock</artifactId>
                 <version>${wiremock.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                <exclusion>
+                  <groupId>org.slf4j</groupId>
+                  <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-gson</artifactId>
                 <version>${feign.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.commons</groupId>
+              <artifactId>commons-lang3</artifactId>
+              <version>3.4</version>
+            </dependency>
+            <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-annotations</artifactId>
+              <version>2.6.1</version>
+            </dependency>
+            <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-databind</artifactId>
+              <version>2.6.1</version>
+            </dependency>
+            <dependency>
+              <groupId>com.fasterxml.jackson.core</groupId>
+              <artifactId>jackson-core</artifactId>
+              <version>2.6.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -121,7 +146,7 @@
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>1.6</version>
                 </plugin>
-            </plugins>
+            </plugins>            
         </pluginManagement>
         <plugins>
             <plugin>
@@ -135,6 +160,24 @@
                     <goals>deploy</goals>
                 </configuration>
             </plugin>
+             <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-enforcer-plugin</artifactId>
+                  <version>3.0.0-M1</version>
+                  <executions>
+                    <execution>
+                      <id>enforce</id>
+                      <configuration>
+                        <rules>
+                          <dependencyConvergence/>
+                        </rules>
+                      </configuration>
+                      <goals>
+                        <goal>enforce</goal>
+                      </goals>
+                    </execution>
+                  </executions>
+                </plugin>
         </plugins>
     </build>
 
