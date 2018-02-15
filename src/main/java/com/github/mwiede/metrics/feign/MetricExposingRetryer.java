@@ -29,12 +29,13 @@ public class MetricExposingRetryer extends Retryer.Default {
     @Override
     public void continueOrPropagate(final RetryableException e) {
 
-      final Meter meter = getMetric(e);
+      final Meter meter = getMetric("reAttempts");
 
       try {
         delegate.continueOrPropagate(e);
         meter.mark();
       } catch (final Exception ex) {
+        getMetric("retryExhausted").mark();
         throw ex;
       }
 
@@ -55,10 +56,10 @@ public class MetricExposingRetryer extends Retryer.Default {
     return new RetryerDecorator(super.clone());
   }
 
-  private Meter getMetric(final RetryableException e) {
+  private Meter getMetric(final String metricName) {
     final Method method = FeignOutboundMetricsDecorator.ACTUAL_METHOD.get();
     final String name =
-        FeignOutboundMetricsDecorator.chooseName("", false, method, "re-attempts", "Metered");
+        FeignOutboundMetricsDecorator.chooseName("", false, method, metricName, "Metered");
     return metricRegistry.meter(name);
   }
 
