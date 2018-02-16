@@ -14,7 +14,7 @@ import feign.Retryer;
  * because it takes the actual invoked method from its threadlocal.
  *
  */
-public class MetricExposingRetryer extends Retryer.Default {
+public class MetricCollectingRetryer extends Retryer.Default {
 
   private final MetricRegistry metricRegistry;
 
@@ -47,7 +47,7 @@ public class MetricExposingRetryer extends Retryer.Default {
     }
   }
 
-  public MetricExposingRetryer(final MetricRegistry metricRegistry) {
+  public MetricCollectingRetryer(final MetricRegistry metricRegistry) {
     this.metricRegistry = metricRegistry;
   }
 

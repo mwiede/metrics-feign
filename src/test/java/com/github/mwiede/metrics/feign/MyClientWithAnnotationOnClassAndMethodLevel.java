@@ -2,6 +2,7 @@ package com.github.mwiede.metrics.feign;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
+import com.codahale.metrics.annotation.ResponseMetered;
 import com.codahale.metrics.annotation.Timed;
 
 /**
@@ -10,9 +11,11 @@ import com.codahale.metrics.annotation.Timed;
 @Timed
 @ExceptionMetered
 @Metered
+@ResponseMetered
 interface MyClientWithAnnotationOnClassAndMethodLevel {
-    @Timed
-    @ExceptionMetered
-    @Metered
-    void myMethod();
+  @Timed
+  @ExceptionMetered
+  @Metered
+  @ResponseMetered
+  void myMethod();
 }

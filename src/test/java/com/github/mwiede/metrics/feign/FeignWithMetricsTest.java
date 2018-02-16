@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.codahale.metrics.MetricRegistry;
@@ -76,6 +77,119 @@ public class FeignWithMetricsTest {
                   "com.github.mwiede.metrics.feign.MyClientWithoutAnnotation.myMethod.retryExhausted.Metered")
               .getCount());
     }
+  }
+
+  @Test
+  @Ignore
+  public void test100() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(100)));
+    final MyClientWithAnnotationOnMethodLevel target =
+        FeignWithMetrics.builder(metricRegistry).target(MyClientWithAnnotationOnMethodLevel.class,
+            String.format("http://localhost:%d", wireMockRule.port()));
+
+
+    target.myMethod();
+
+    assertResponseMeterMetric(100);
+  }
+
+  @Test
+  public void test200() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(201)));
+    final MyClientWithAnnotationOnMethodLevel target =
+        FeignWithMetrics.builder(metricRegistry).target(MyClientWithAnnotationOnMethodLevel.class,
+            String.format("http://localhost:%d", wireMockRule.port()));
+
+
+    target.myMethod();
+
+    assertResponseMeterMetric(201);
+  }
+
+  @Test
+  public void test300() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(302)));
+    final MyClientWithAnnotationOnMethodLevel target =
+        FeignWithMetrics.builder(metricRegistry).target(MyClientWithAnnotationOnMethodLevel.class,
+            String.format("http://localhost:%d", wireMockRule.port()));
+
+
+    try {
+      target.myMethod();
+    } catch (final Exception e) {
+    } finally {
+      assertResponseMeterMetric(302);
+    }
+  }
+
+  @Test
+  public void test400() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(400)));
+    final MyClientWithAnnotationOnMethodLevel target =
+        FeignWithMetrics.builder(metricRegistry).target(MyClientWithAnnotationOnMethodLevel.class,
+            String.format("http://localhost:%d", wireMockRule.port()));
+
+
+    try {
+      target.myMethod();
+    } catch (final Exception e) {
+    } finally {
+      assertResponseMeterMetric(400);
+    }
+  }
+
+  @Test
+  public void test500() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(500)));
+    final MyClientWithAnnotationOnMethodLevel target =
+        FeignWithMetrics.builder(metricRegistry).target(MyClientWithAnnotationOnMethodLevel.class,
+            String.format("http://localhost:%d", wireMockRule.port()));
+
+
+    try {
+      target.myMethod();
+    } catch (final Exception e) {
+    } finally {
+      assertResponseMeterMetric(500);
+    }
+  }
+
+  private void assertResponseMeterMetric(final int code) {
+    assertEquals(
+        code <= 200 ? 1 : 0,
+        metricRegistry
+            .getMeters()
+            .get(
+                "com.github.mwiede.metrics.feign.MyClientWithAnnotationOnMethodLevel.myMethod.1xx-responses")
+            .getCount());
+    assertEquals(
+        code >= 200 && code < 300 ? 1 : 0,
+        metricRegistry
+            .getMeters()
+            .get(
+                "com.github.mwiede.metrics.feign.MyClientWithAnnotationOnMethodLevel.myMethod.2xx-responses")
+            .getCount());
+    assertEquals(
+        code >= 300 && code < 400 ? 1 : 0,
+        metricRegistry
+            .getMeters()
+            .get(
+                "com.github.mwiede.metrics.feign.MyClientWithAnnotationOnMethodLevel.myMethod.3xx-responses")
+            .getCount());
+    assertEquals(
+        code >= 400 && code < 500 ? 1 : 0,
+        metricRegistry
+            .getMeters()
+            .get(
+                "com.github.mwiede.metrics.feign.MyClientWithAnnotationOnMethodLevel.myMethod.4xx-responses")
+            .getCount());
+    assertEquals(
+        code >= 500 ? 1 : 0,
+        metricRegistry
+            .getMeters()
+            .get(
+                "com.github.mwiede.metrics.feign.MyClientWithAnnotationOnMethodLevel.myMethod.5xx-responses")
+            .getCount());
   }
 
 }

@@ -7,6 +7,7 @@ import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
+import com.codahale.metrics.annotation.ResponseMetered;
 import com.codahale.metrics.annotation.Timed;
 import com.github.mwiede.metrics.feign.FeignOutboundMetricsDecorator;
 import com.github.mwiede.metrics.feign.FeignWithMetrics;
@@ -23,6 +24,7 @@ public class Example {
   @Timed
   @Metered
   @ExceptionMetered
+  @ResponseMetered
   interface GitHub {
     @RequestLine("GET /repos/{owner}/{repo}/contributors")
     List<Contributor> contributors(@Param("owner") String owner, @Param("repo") String repo);

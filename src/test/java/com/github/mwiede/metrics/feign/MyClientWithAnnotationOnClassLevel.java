@@ -2,6 +2,7 @@ package com.github.mwiede.metrics.feign;
 
 import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
+import com.codahale.metrics.annotation.ResponseMetered;
 import com.codahale.metrics.annotation.Timed;
 
 import feign.RequestLine;
@@ -12,8 +13,9 @@ import feign.RequestLine;
 @Timed
 @ExceptionMetered
 @Metered
+@ResponseMetered
 interface MyClientWithAnnotationOnClassLevel {
 
-    @RequestLine("POST /")
-    void myMethod();
+  @RequestLine("POST /")
+  void myMethod();
 }

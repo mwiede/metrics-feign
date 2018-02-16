@@ -29,104 +29,124 @@ import feign.FeignException;
 import feign.InvocationHandlerFactory;
 
 /**
- * Testing, whether the {@link FeignOutboundMetricsDecorator.MethodHandler} really triggers the registered metrics.
+ * Testing, whether the {@link FeignOutboundMetricsDecorator.MethodHandler} really triggers the
+ * registered metrics.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class FeignOutboundMetricsMethodHandlerTest {
 
-    @ClassRule
-    public static WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig().dynamicPort());
+  @ClassRule
+  public static WireMockRule wireMockRule = new WireMockRule(WireMockConfiguration.wireMockConfig()
+      .dynamicPort());
 
-    MetricRegistry metricRegistry;
+  MetricRegistry metricRegistry;
 
-    @BeforeClass
-    public static void initWiremock() {
-        // Catch-all case
-        stubFor(post(anyUrl()).willReturn(aResponse().withStatus(200)));
-    }
+  @BeforeClass
+  public static void initWiremock() {
+    // Catch-all case
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(200)));
+  }
 
-    @Before
-    public void init() {
-        metricRegistry = new MetricRegistry();
-    }
+  @Before
+  public void init() {
+    metricRegistry = new MetricRegistry();
+  }
 
-    @Test
-    public void nothingIsMetered() {
-        MyClientWithoutAnnotation target = Feign.builder().invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(), metricRegistry))
-                .target(MyClientWithoutAnnotation.class, String.format("http://localhost:%d", wireMockRule.port()));
+  @Test
+  public void nothingIsMetered() {
+    final MyClientWithoutAnnotation target =
+        Feign
+            .builder()
+            .invocationHandlerFactory(
+                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                    metricRegistry))
+            .target(MyClientWithoutAnnotation.class,
+                String.format("http://localhost:%d", wireMockRule.port()));
 
-        target.myMethod();
+    target.myMethod();
 
-        assertTrue("Expected to have no metrics registered and tracked.", metricRegistry.getMetrics().isEmpty());
+    assertTrue("Expected to have no metrics registered and tracked.", metricRegistry.getMetrics()
+        .isEmpty());
 
-    }
+  }
 
-    @Test
-    public void timedPerClassMethodsAreTimed() {
-        MyClientWithAnnotationOnClassLevel target = Feign.builder().invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(), metricRegistry))
-                .target(MyClientWithAnnotationOnClassLevel.class,
-                        String.format("http://localhost:%d", wireMockRule.port()));
+  @Test
+  public void timedPerClassMethodsAreTimed() {
+    final MyClientWithAnnotationOnClassLevel target =
+        Feign
+            .builder()
+            .invocationHandlerFactory(
+                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                    metricRegistry))
+            .target(MyClientWithAnnotationOnClassLevel.class,
+                String.format("http://localhost:%d", wireMockRule.port()));
 
-        target.myMethod();
+    target.myMethod();
 
-        assertMetrics();
+    assertMetrics();
 
-    }
+  }
 
-    @Test
-    public void timedPerMethodsAreTimed() {
-        MyClientWithAnnotationOnMethodLevel target = Feign.builder().invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(), metricRegistry))
-                .target(MyClientWithAnnotationOnMethodLevel.class,
-                        String.format("http://localhost:%d", wireMockRule.port()));
+  @Test
+  public void timedPerMethodsAreTimed() {
+    final MyClientWithAnnotationOnMethodLevel target =
+        Feign
+            .builder()
+            .invocationHandlerFactory(
+                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                    metricRegistry))
+            .target(MyClientWithAnnotationOnMethodLevel.class,
+                String.format("http://localhost:%d", wireMockRule.port()));
 
-        target.myMethod();
+    target.myMethod();
 
-        assertMetrics();
-    }
+    assertMetrics();
+  }
 
-    @Test(expected = FeignException.class)
-    public void exception() {
-        stubFor(post(anyUrl()).willReturn(aResponse().withStatus(400)));
-        MyClientWithAnnotationOnMethodLevel target = Feign.builder().invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(), metricRegistry))
-                .target(MyClientWithAnnotationOnMethodLevel.class,
-                        String.format("http://localhost:%d", wireMockRule.port()));
-        try {
-            target.myMethod();
-        } finally {
+  @Test(expected = FeignException.class)
+  public void exception() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withStatus(400)));
+    final MyClientWithAnnotationOnMethodLevel target =
+        Feign
+            .builder()
+            .invocationHandlerFactory(
+                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                    metricRegistry))
+            .target(MyClientWithAnnotationOnMethodLevel.class,
+                String.format("http://localhost:%d", wireMockRule.port()));
+    try {
+      target.myMethod();
+    } finally {
 
-            assertMetrics();
+      assertMetrics();
 
-            Set<Map.Entry<String, Meter>> entries = metricRegistry.getMeters().entrySet();
+      final Set<Map.Entry<String, Meter>> entries = metricRegistry.getMeters().entrySet();
 
-            entries.forEach(entry -> {
-                if (entry.getKey().endsWith(ExceptionMetered.DEFAULT_NAME_SUFFIX)) {
-                    assertEquals(String.format("wrong number of invocations in metric %s", entry.getKey()), 1,
-                            entry.getValue().getCount());
-                }
-            });
+      entries.forEach(entry -> {
+        if (entry.getKey().endsWith(ExceptionMetered.DEFAULT_NAME_SUFFIX)) {
+          assertEquals(String.format("wrong number of invocations in metric %s", entry.getKey()),
+              1, entry.getValue().getCount());
         }
+      });
     }
+  }
 
-    private void assertMetrics() {
-        Timer timer = metricRegistry.getTimers().values().iterator().next();
-        assertEquals("wrong number of invocations in metric.", 1, timer.getCount());
+  private void assertMetrics() {
+    final Timer timer = metricRegistry.getTimers().values().iterator().next();
+    assertEquals("wrong number of invocations in metric.", 1, timer.getCount());
 
-        assertTrue("wrong value of mean in metric.", timer.getMeanRate() > 0);
+    assertTrue("wrong value of mean in metric.", timer.getMeanRate() > 0);
 
-        assertEquals("wrong number of meter metrics.", 2, metricRegistry.getMeters().values().size());
+    assertEquals("wrong number of meter metrics.", 7, metricRegistry.getMeters().values().size());
 
-        Set<Map.Entry<String, Meter>> entries = metricRegistry.getMeters().entrySet();
+    final Set<Map.Entry<String, Meter>> entries = metricRegistry.getMeters().entrySet();
 
-        entries.forEach(entry -> {
-            if (entry.getKey().endsWith("Metered")) {
-                assertEquals(String.format("wrong number of invocations in metric %s", entry.getKey()), 1,
-                        entry.getValue().getCount());
-            }
-        });
+    entries.forEach(entry -> {
+      if (entry.getKey().endsWith("Metered")) {
+        assertEquals(String.format("wrong number of invocations in metric %s", entry.getKey()), 1,
+            entry.getValue().getCount());
+      }
+    });
 
-    }
+  }
 }
