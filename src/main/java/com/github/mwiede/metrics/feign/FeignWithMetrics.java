@@ -8,10 +8,10 @@ import feign.InvocationHandlerFactory;
 import feign.Retryer;
 
 /**
- * Extension of {@link feign.Feign} which includes a builder which uses
- * {@link FeignOutboundMetricsDecorator} instead of {@link InvocationHandlerFactory.Default},
- * {@link MetricCollectingRetryer} instead of {@link Retryer.Default} and
- * {@link MetricCollectingClient} instead of {@link Client.Default}.
+ * Extension of {@link feign.Feign} which includes a builder which decorates some of the default
+ * implementations. {@link InvocationHandlerFactory.Default} is decorated with
+ * {@link FeignMetricsInvocationHandlerFactoryDecorator}, {@link Retryer.Default} with {@link FeignMetricsRetryerDecorator} and
+ * {@link Client.Default} with {@link FeignMetricsClientDecorator}.
  */
 public abstract class FeignWithMetrics {
 
@@ -22,13 +22,38 @@ public abstract class FeignWithMetrics {
    * @param metricRegistry
    * @return the builder
    */
-  public static Feign.Builder builder(final MetricRegistry metricRegistry) {
-    return new Feign.Builder()
-        .invocationHandlerFactory(
-            new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
-                metricRegistry)).retryer(new MetricCollectingRetryer(metricRegistry))
-        .client(new MetricCollectingClient(null, null));
+  public static feign.Feign.Builder builder(final MetricRegistry metricRegistry) {
+    return new FeignWithMetrics.Builder(metricRegistry)
+        .invocationHandlerFactory(new InvocationHandlerFactory.Default())
+        .retryer(new Retryer.Default()).client(new Client.Default(null, null));
 
+  }
+
+  public static class Builder extends Feign.Builder {
+
+    private final MetricRegistry metricRegistry;
+
+    public Builder(final MetricRegistry metricRegistry) {
+      super();
+      this.metricRegistry = metricRegistry;
+    }
+
+    @Override
+    public feign.Feign.Builder client(final Client client) {
+      return super.client(new FeignMetricsClientDecorator(client));
+    }
+
+    @Override
+    public feign.Feign.Builder invocationHandlerFactory(
+        final InvocationHandlerFactory invocationHandlerFactory) {
+      return super.invocationHandlerFactory(new FeignMetricsInvocationHandlerFactoryDecorator(
+          invocationHandlerFactory, metricRegistry));
+    }
+
+    @Override
+    public feign.Feign.Builder retryer(final Retryer retryer) {
+      return super.retryer(new FeignMetricsRetryerDecorator(retryer, metricRegistry));
+    }
   }
 
 }

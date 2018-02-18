@@ -9,7 +9,7 @@ import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.ResponseMetered;
 import com.codahale.metrics.annotation.Timed;
-import com.github.mwiede.metrics.feign.FeignOutboundMetricsDecorator;
+import com.github.mwiede.metrics.feign.FeignMetricsInvocationHandlerFactoryDecorator;
 import com.github.mwiede.metrics.feign.FeignWithMetrics;
 
 import feign.Param;
@@ -17,7 +17,7 @@ import feign.RequestLine;
 import feign.gson.GsonDecoder;
 
 /**
- * An example showing how {@link FeignOutboundMetricsDecorator} can be used.
+ * An example showing how {@link FeignMetricsInvocationHandlerFactoryDecorator} can be used.
  */
 public class Example {
 

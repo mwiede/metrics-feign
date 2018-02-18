@@ -33,14 +33,14 @@ import feign.Target;
  * This class is inspired by
  * com.codahale.metrics.jersey2.InstrumentedResourceMethodApplicationListener.
  */
-public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
+public class FeignMetricsInvocationHandlerFactoryDecorator implements InvocationHandlerFactory {
 
   static final ThreadLocal<Method> ACTUAL_METHOD = new ThreadLocal<Method>();
   static final ThreadLocal<ResponseMeterMetric> ACTUAL_METRIC =
       new ThreadLocal<ResponseMeterMetric>();
 
   private final MetricRegistry metricRegistry;
-  private final InvocationHandlerFactory original;
+  private final InvocationHandlerFactory delegate;
 
   private final ConcurrentMap<Method, Timer> timers = new ConcurrentHashMap<>();
   private final ConcurrentMap<Method, Meter> meters = new ConcurrentHashMap<>();
@@ -49,9 +49,9 @@ public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
   private final ConcurrentMap<Method, ResponseMeterMetric> responseMeters =
       new ConcurrentHashMap<>();
 
-  public FeignOutboundMetricsDecorator(final InvocationHandlerFactory original,
+  public FeignMetricsInvocationHandlerFactoryDecorator(final InvocationHandlerFactory original,
       final MetricRegistry metricRegistry) {
-    this.original = original;
+    this.delegate = original;
     this.metricRegistry = metricRegistry;
   }
 
@@ -143,7 +143,7 @@ public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
 
       } catch (final Exception e) {
 
-        final FeignOutboundMetricsDecorator.ExceptionMeterMetric metric =
+        final FeignMetricsInvocationHandlerFactoryDecorator.ExceptionMeterMetric metric =
             (method != null) ? this.exceptionMeters.get(method) : null;
 
         if (metric != null
@@ -174,7 +174,7 @@ public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
           exceptionMeters, timers, responseMeters));
     }
 
-    return original.create(target, dispatch);
+    return delegate.create(target, dispatch);
   }
 
   private void registerMetricsForMethod(final Method method) {
@@ -228,14 +228,14 @@ public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
       final ResponseMetered classLevelResponseMetered) {
 
     if (classLevelResponseMetered != null) {
-      responseMeters.putIfAbsent(method, new FeignOutboundMetricsDecorator.ResponseMeterMetric(
+      responseMeters.putIfAbsent(method, new FeignMetricsInvocationHandlerFactoryDecorator.ResponseMeterMetric(
           metricRegistry, method, classLevelResponseMetered));
       return;
     }
     final ResponseMetered annotation = method.getAnnotation(ResponseMetered.class);
 
     if (annotation != null) {
-      responseMeters.putIfAbsent(method, new FeignOutboundMetricsDecorator.ResponseMeterMetric(
+      responseMeters.putIfAbsent(method, new FeignMetricsInvocationHandlerFactoryDecorator.ResponseMeterMetric(
           metricRegistry, method, annotation));
     }
 
@@ -245,14 +245,14 @@ public class FeignOutboundMetricsDecorator implements InvocationHandlerFactory {
       final ExceptionMetered classLevelExceptionMetered) {
 
     if (classLevelExceptionMetered != null) {
-      exceptionMeters.putIfAbsent(method, new FeignOutboundMetricsDecorator.ExceptionMeterMetric(
+      exceptionMeters.putIfAbsent(method, new FeignMetricsInvocationHandlerFactoryDecorator.ExceptionMeterMetric(
           metricRegistry, method, classLevelExceptionMetered));
       return;
     }
     final ExceptionMetered annotation = method.getAnnotation(ExceptionMetered.class);
 
     if (annotation != null) {
-      exceptionMeters.putIfAbsent(method, new FeignOutboundMetricsDecorator.ExceptionMeterMetric(
+      exceptionMeters.putIfAbsent(method, new FeignMetricsInvocationHandlerFactoryDecorator.ExceptionMeterMetric(
           metricRegistry, method, annotation));
     }
   }

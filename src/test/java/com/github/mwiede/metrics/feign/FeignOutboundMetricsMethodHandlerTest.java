@@ -29,7 +29,7 @@ import feign.FeignException;
 import feign.InvocationHandlerFactory;
 
 /**
- * Testing, whether the {@link FeignOutboundMetricsDecorator.MethodHandler} really triggers the
+ * Testing, whether the {@link FeignMetricsInvocationHandlerFactoryDecorator.MethodHandler} really triggers the
  * registered metrics.
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -58,7 +58,7 @@ public class FeignOutboundMetricsMethodHandlerTest {
         Feign
             .builder()
             .invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                new FeignMetricsInvocationHandlerFactoryDecorator(new InvocationHandlerFactory.Default(),
                     metricRegistry))
             .target(MyClientWithoutAnnotation.class,
                 String.format("http://localhost:%d", wireMockRule.port()));
@@ -76,7 +76,7 @@ public class FeignOutboundMetricsMethodHandlerTest {
         Feign
             .builder()
             .invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                new FeignMetricsInvocationHandlerFactoryDecorator(new InvocationHandlerFactory.Default(),
                     metricRegistry))
             .target(MyClientWithAnnotationOnClassLevel.class,
                 String.format("http://localhost:%d", wireMockRule.port()));
@@ -93,7 +93,7 @@ public class FeignOutboundMetricsMethodHandlerTest {
         Feign
             .builder()
             .invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                new FeignMetricsInvocationHandlerFactoryDecorator(new InvocationHandlerFactory.Default(),
                     metricRegistry))
             .target(MyClientWithAnnotationOnMethodLevel.class,
                 String.format("http://localhost:%d", wireMockRule.port()));
@@ -110,7 +110,7 @@ public class FeignOutboundMetricsMethodHandlerTest {
         Feign
             .builder()
             .invocationHandlerFactory(
-                new FeignOutboundMetricsDecorator(new InvocationHandlerFactory.Default(),
+                new FeignMetricsInvocationHandlerFactoryDecorator(new InvocationHandlerFactory.Default(),
                     metricRegistry))
             .target(MyClientWithAnnotationOnMethodLevel.class,
                 String.format("http://localhost:%d", wireMockRule.port()));

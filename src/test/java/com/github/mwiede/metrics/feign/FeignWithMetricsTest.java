@@ -18,6 +18,8 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.http.Fault;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
+import feign.Retryer;
+
 public class FeignWithMetricsTest {
 
   @ClassRule
@@ -64,6 +66,38 @@ public class FeignWithMetricsTest {
       assertEquals(2, metricRegistry.getMeters().size());
       assertEquals(
           4,
+          metricRegistry
+              .getMeters()
+              .get(
+                  "com.github.mwiede.metrics.feign.MyClientWithoutAnnotation.myMethod.reAttempts.Metered")
+              .getCount());
+      assertEquals(
+          1,
+          metricRegistry
+              .getMeters()
+              .get(
+                  "com.github.mwiede.metrics.feign.MyClientWithoutAnnotation.myMethod.retryExhausted.Metered")
+              .getCount());
+    }
+  }
+
+  @Test
+  public void testNoRetryer() {
+    stubFor(post(anyUrl()).willReturn(aResponse().withFault(Fault.RANDOM_DATA_THEN_CLOSE)));
+    final MyClientWithoutAnnotation target =
+        FeignWithMetrics
+            .builder(metricRegistry)
+            .retryer(Retryer.NEVER_RETRY)
+            .target(MyClientWithoutAnnotation.class,
+                String.format("http://localhost:%d", wireMockRule.port()));
+
+    try {
+      target.myMethod();
+    } catch (final Exception e) {
+    } finally {
+      assertEquals(2, metricRegistry.getMeters().size());
+      assertEquals(
+          0,
           metricRegistry
               .getMeters()
               .get(

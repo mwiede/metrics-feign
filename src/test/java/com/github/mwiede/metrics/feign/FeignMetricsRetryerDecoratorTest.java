@@ -16,7 +16,7 @@ import com.codahale.metrics.MetricRegistry;
 import feign.RetryableException;
 import feign.Retryer;
 
-public class MetricCollectingRetryerTest {
+public class FeignMetricsRetryerDecoratorTest {
 
   MetricRegistry metricRegistry;
 
@@ -28,9 +28,9 @@ public class MetricCollectingRetryerTest {
   @Test
   public void continueOrPropagate() {
 
-    FeignOutboundMetricsDecorator.ACTUAL_METHOD.set(this.getClass().getDeclaredMethods()[0]);
+    FeignMetricsInvocationHandlerFactoryDecorator.ACTUAL_METHOD.set(this.getClass().getDeclaredMethods()[0]);
 
-    new MetricCollectingRetryer(metricRegistry).clone().continueOrPropagate(
+    new FeignMetricsRetryerDecorator(new Retryer.Default(), metricRegistry).clone().continueOrPropagate(
         new RetryableException("message", new Date()));
 
     assertEquals("wrong number of meter metrics.", 1, metricRegistry.getMeters().values().size());
@@ -46,9 +46,10 @@ public class MetricCollectingRetryerTest {
 
   @Test
   public void testClone() {
-    final MetricCollectingRetryer metricCollectingRetryer = new MetricCollectingRetryer(metricRegistry);
-    final Retryer clone = metricCollectingRetryer.clone();
-    assertNotEquals(metricCollectingRetryer, clone);
+    final FeignMetricsRetryerDecorator feignMetricsRetryerDecorator =
+        new FeignMetricsRetryerDecorator(new Retryer.Default(), metricRegistry);
+    final Retryer clone = feignMetricsRetryerDecorator.clone();
+    assertNotEquals(feignMetricsRetryerDecorator, clone);
   }
 
 }

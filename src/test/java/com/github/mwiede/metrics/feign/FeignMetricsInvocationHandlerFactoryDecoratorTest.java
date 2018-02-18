@@ -25,11 +25,11 @@ import feign.InvocationHandlerFactory;
 import feign.Target;
 
 /**
- * Testing whether {@link FeignOutboundMetricsDecorator} registers the correct metrics in
+ * Testing whether {@link FeignMetricsInvocationHandlerFactoryDecorator} registers the correct metrics in
  * {@link MetricRegistry}.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class FeignOutboundMetricsDecoratorTest {
+public class FeignMetricsInvocationHandlerFactoryDecoratorTest {
 
   @Mock
   InvocationHandlerFactory invocationHandlerFactory;
@@ -45,19 +45,19 @@ public class FeignOutboundMetricsDecoratorTest {
   MetricRegistry metricRegistry;
 
   @InjectMocks
-  FeignOutboundMetricsDecorator feignOutboundMetricsDecorator;
+  FeignMetricsInvocationHandlerFactoryDecorator feignMetricsInvocationHandlerFactoryDecorator;
 
   @Before
   public void init() {
     metricRegistry = new MetricRegistry();
-    feignOutboundMetricsDecorator =
-        new FeignOutboundMetricsDecorator(invocationHandlerFactory, metricRegistry);
+    feignMetricsInvocationHandlerFactoryDecorator =
+        new FeignMetricsInvocationHandlerFactoryDecorator(invocationHandlerFactory, metricRegistry);
   }
 
   @Test
   public void createEmpty() throws Exception {
     dispatch = Collections.emptyMap();
-    feignOutboundMetricsDecorator.create(target, dispatch);
+    feignMetricsInvocationHandlerFactoryDecorator.create(target, dispatch);
     assertTrue("metricRegistry should not contain any metric.", metricRegistry.getNames().isEmpty());
   }
 
@@ -65,7 +65,7 @@ public class FeignOutboundMetricsDecoratorTest {
   public void createOnMethodLevelWithoutAnnotation() throws Exception {
     dispatch = new HashMap<>();
     dispatch.put(MyClientWithoutAnnotation.class.getMethods()[0], methodHandler);
-    feignOutboundMetricsDecorator.create(target, dispatch);
+    feignMetricsInvocationHandlerFactoryDecorator.create(target, dispatch);
     assertTrue("metricRegistry should not contain any metric.", metricRegistry.getNames().isEmpty());
   }
 
@@ -73,7 +73,7 @@ public class FeignOutboundMetricsDecoratorTest {
   public void createOnMethodLevelWithAnnotation() throws Exception {
     dispatch = new HashMap<>();
     dispatch.put(MyClientWithAnnotationOnMethodLevel.class.getMethods()[0], methodHandler);
-    feignOutboundMetricsDecorator.create(target, dispatch);
+    feignMetricsInvocationHandlerFactoryDecorator.create(target, dispatch);
     assertEquals("metricRegistry should contain 8 metrics.", 8, metricRegistry.getNames().size());
     assertEquals(
         Stream
@@ -93,7 +93,7 @@ public class FeignOutboundMetricsDecoratorTest {
   public void createOnClassAndMethodLevelWithAnnotation() throws Exception {
     dispatch = new HashMap<>();
     dispatch.put(MyClientWithAnnotationOnClassAndMethodLevel.class.getMethods()[0], methodHandler);
-    feignOutboundMetricsDecorator.create(target, dispatch);
+    feignMetricsInvocationHandlerFactoryDecorator.create(target, dispatch);
     assertEquals("metricRegistry should contain 8 metrics.", 8, metricRegistry.getNames().size());
     assertEquals(
         Stream
@@ -113,7 +113,7 @@ public class FeignOutboundMetricsDecoratorTest {
   public void createOnClassLevelWithAnnotation() throws Exception {
     dispatch = new HashMap<>();
     dispatch.put(MyClientWithAnnotationOnClassLevel.class.getMethods()[0], methodHandler);
-    feignOutboundMetricsDecorator.create(target, dispatch);
+    feignMetricsInvocationHandlerFactoryDecorator.create(target, dispatch);
     assertEquals("metricRegistry should contain 8 metrics.", 8, metricRegistry.getNames().size());
     assertEquals(
         Stream
