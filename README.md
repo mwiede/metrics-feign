@@ -69,7 +69,7 @@ You can use this library via maven:
 <dependency>
   <groupId>com.github.mwiede</groupId>
   <artifactId>metrics-feign</artifactId>
-  <version>1.0</version>
+  <version>2.0</version>
 </dependency>
 ```
 
