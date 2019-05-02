@@ -21,8 +21,8 @@
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>
-        <mockito.version>2.11.0</mockito.version>
-        <wiremock.version>2.5.0</wiremock.version>
+        <mockito.version>2.27.0</mockito.version>
+        <wiremock.version>2.23.2</wiremock.version>
     </properties>
 
     <dependencyManagement>
@@ -78,17 +78,17 @@
             <dependency>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-annotations</artifactId>
-              <version>2.6.1</version>
+              <version>2.9.8</version>
             </dependency>
             <dependency>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-databind</artifactId>
-              <version>2.6.7.1</version>
+              <version>2.9.8</version>
             </dependency>
             <dependency>
               <groupId>com.fasterxml.jackson.core</groupId>
               <artifactId>jackson-core</artifactId>
-              <version>2.6.1</version>
+              <version>2.9.8</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -121,6 +121,12 @@
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>asm</artifactId>
+                    <groupId>org.ow2.asm</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.github.openfeign</groupId>
