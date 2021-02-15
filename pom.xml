@@ -16,8 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compilation dependencies -->
-        <metrics.version>4.0.2</metrics.version>
-        <feign.version>9.5.1</feign.version>
+        <metrics.version>4.1.2</metrics.version>
+        <feign.version>10.12</feign.version>
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>
