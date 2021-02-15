@@ -20,7 +20,7 @@
         <feign.version>10.12</feign.version>
 
         <!-- Test dependencies -->
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <mockito.version>2.27.0</mockito.version>
         <wiremock.version>2.23.2</wiremock.version>
     </properties>
