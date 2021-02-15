@@ -1,7 +1,6 @@
 package com.github.mwiede.metrics.feign;
 
 import com.codahale.metrics.MetricRegistry;
-
 import feign.Client;
 import feign.Feign;
 import feign.InvocationHandlerFactory;
@@ -12,13 +11,15 @@ import feign.Retryer;
  * implementations. {@link InvocationHandlerFactory.Default} is decorated with
  * {@link FeignMetricsInvocationHandlerFactoryDecorator}, {@link Retryer.Default} with {@link FeignMetricsRetryerDecorator} and
  * {@link Client.Default} with {@link FeignMetricsClientDecorator}.
+ *
+ * @deprecated in favor of Feign's {@link feign.Capability} API use {@link AnnotionMetricsCapability} instead.
  */
 public abstract class FeignWithMetrics {
 
   /**
    * Convenience method to instantiate a {@link feign.Feign.Builder} including the classes to
    * configure necessary classes to collect metrics.
-   * 
+   *
    * @param metricRegistry
    * @return the builder
    */

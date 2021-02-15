@@ -4,7 +4,7 @@
 
     <groupId>com.github.mwiede</groupId>
     <artifactId>metrics-feign</artifactId>
-    <version>2.2-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
 
     <description>A decorator wrapping Feign client method handlers in order to provide metrics of calls to feign target
         interfaces.
@@ -16,8 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compilation dependencies -->
-        <metrics.version>4.0.2</metrics.version>
-        <feign.version>9.5.1</feign.version>
+        <metrics.version>4.1.2</metrics.version>
+        <feign.version>10.12</feign.version>
 
         <!-- Test dependencies -->
         <junit.version>4.12</junit.version>
