@@ -114,7 +114,7 @@ You can use this library via maven:
 <dependency>
   <groupId>com.github.mwiede</groupId>
   <artifactId>metrics-feign</artifactId>
-  <version>3.0</version>
+  <version>3.1</version>
 </dependency>
 ```
 
