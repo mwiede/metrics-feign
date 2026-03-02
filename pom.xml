@@ -23,7 +23,7 @@
         <junit.version>4.13.2</junit.version>
         <mockito.version>4.8.1</mockito.version>
         <wiremock.version>2.27.2</wiremock.version>
-		<jackson.version>2.13.4</jackson.version>
+		<jackson.version>2.18.6</jackson.version>
     </properties>
 
     <dependencyManagement>
